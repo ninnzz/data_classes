@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "data-classes"
+version = "0.1.0"
+description = "data classses experiments and analysis"
+authors = ["ninz <nreclarin@gmail.com>"]
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.92.0"
+jupyter = "^1.0.0"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
+
+
+[tool.poetry.group.dev.dependencies]
+locust = "^2.15.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
