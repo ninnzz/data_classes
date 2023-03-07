@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 # Enhanced dataclass.dataclass object
 from pydantic.dataclasses import dataclass
+from pydantic import BaseModel
+
 app = FastAPI()
 
 
@@ -18,6 +20,7 @@ class Suspension:
     travel: int = 0
     model: str = ""
 
+
 @dataclass
 class Bike:
     frame_brand: str = ""
@@ -28,6 +31,11 @@ class Bike:
 
 @dataclass
 class GetRiderResponse:
+    rider: Rider
+    bike: Bike
+
+
+class GetRiderResponseBaseModel(BaseModel):
     rider: Rider
     bike: Bike
 
@@ -43,7 +51,7 @@ def generate_data() -> dict:
     return {
         "rider": {
             "name": "rider1",
-            "age": 25,
+            "age": "12",
             "weight": 75,
             "height": 170
         },
@@ -79,8 +87,30 @@ async def get_rider_json():
     return rider_profile
 
 
-@app.get("get_rider/dataclass")
-async def get_rider_dataclass():
+@app.get("/get_rider/jsonvalidation")
+async def get_rider_json_with_validation():
+    """
+    Json api call with validation.
+
+    :return:
+    :rtype:
+    """
+
+    rider_profile = generate_data()
+
+    check_cols = ["age", "weight", "height"]
+    # Add simple validation and serialization
+    for col in check_cols:
+        if not rider_profile["rider"][col].isnumeric():
+            raise ValueError(f"'{col}' is not a number")
+        else:
+            rider_profile["rider"][col] = int(rider_profile["rider"][col])
+
+    return rider_profile
+
+
+@app.get("/get_rider/dataclass", response_model=GetRiderResponse)
+async def get_rider_dataclass() -> GetRiderResponse:
     """
     Dataclass api call.
 
@@ -88,4 +118,30 @@ async def get_rider_dataclass():
     :rtype:
     """
 
-    return {}
+    rider_profile = generate_data()
+
+    resp = GetRiderResponse(
+        rider=Rider(**rider_profile["rider"]),
+        bike=Bike(
+            frame_brand=rider_profile["bike"]["frame_brand"],
+            model=rider_profile["bike"]["model"],
+            rear_suspension=Suspension(**rider_profile["bike"]["rear_suspension"]),
+            front_suspension=Suspension(**rider_profile["bike"]["front_suspension"])
+        )
+    )
+
+    return resp
+
+
+@app.get("/get_rider/basemodel", response_model=GetRiderResponseBaseModel)
+async def get_rider_basemodel():
+    """
+    BaseModel api call.
+
+    :return:
+    :rtype:
+    """
+
+    rider_profile = generate_data()
+
+    return rider_profile
