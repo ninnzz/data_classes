@@ -30,6 +30,6 @@ poetry run uvicorn src.server:app --reload
 Run locust testing
 
 ```shell
-poetry run locust -f src/locustfile.py
+poetry run locust -f src/locustfile.py --tags [json|jsonval|dataclass|basemodel]
 # open http://0.0.0.0:8089 to run load test
 ```
