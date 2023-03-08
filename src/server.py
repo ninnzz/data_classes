@@ -2,6 +2,7 @@ from fastapi import FastAPI
 # Enhanced dataclass.dataclass object
 from pydantic.dataclasses import dataclass
 from pydantic import BaseModel
+from dataclasses import field
 
 app = FastAPI()
 
@@ -25,8 +26,8 @@ class Suspension:
 class Bike:
     frame_brand: str = ""
     model: str = ""
-    rear_suspension: Suspension = None
-    front_suspension: Suspension = None
+    rear_suspension: Suspension = field(default_factory=Suspension)
+    front_suspension: Suspension = field(default_factory=Suspension)
 
 
 @dataclass
