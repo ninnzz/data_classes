@@ -8,6 +8,16 @@ Dataclass experiments
 - [x] Dataclass speed on apis with checks (use fastapi)
 - [ ] Dataclass on datascience and ML projects, check speed and benchmark
 
+# Outline
+
+- What are dataclasses?
+  - Parameters
+  - Initialization
+  - Dunder methods
+- Where do we use dataclass
+- Similar libraries
+- Some benchmark comparison for datalass and other alternatives
+
 
 ### API load testing
 
